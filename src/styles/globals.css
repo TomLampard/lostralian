@@ -163,6 +163,24 @@
     font-named-instance: "Italic";
   }
 
+  @font-face {
+    font-family: "EB Garamond";
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700;800&display=swap");
+    font-named-instance: "Regular";
+  }
+
+  @font-face {
+    font-family: "EB Garamond";
+    font-style: italic;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500;1,600;1,700;1,800&display=swap");
+    font-named-instance: "Italic";
+  }
+
   body {
     @apply text-base;
     @apply text-primary;
