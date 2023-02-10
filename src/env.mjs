@@ -22,10 +22,10 @@ const server = z.object({
   // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
   DISCORD_CLIENT_ID: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
-  ACCESS_KEY_ID: z.string(),
-  SECRET_ACCESS_KEY: z.string(),
+  ACCESS_KEY: z.string(),
+  SECRET_KEY: z.string(),
   REGION: z.string(),
-  BUCKET: z.string(),
+  S3_BUCKET_NAME: z.string(),
 });
 
 /**
@@ -43,10 +43,10 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
-  ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-  SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  REGION: process.env.AWS_REGION,
-  BUCKET: process.env.AWS_BUCKET,
+  ACCESS_KEY: process.env.ACCESS_KEY,
+  SECRET_KEY: process.env.SECRET_KEY,
+  REGION: process.env.REGION,
+  S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,

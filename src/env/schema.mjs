@@ -8,9 +8,9 @@ export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
   DISCORD_CLIENT_ID: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
-  S3_ACCESS_KEY_ID: z.string(), 
-  S3_SECRET_ACCESS_KEY: z.string(),
-  S3_REGION: z.string(),
+  ACCESS_KEY: z.string(), 
+  SECRET_KEY: z.string(),
+  REGION: z.string(),
   S3_BUCKET_NAME: z.string(),
   NEXTAUTH_SECRET:
     process.env.NODE_ENV === "production"
@@ -38,10 +38,10 @@ export const serverEnv = {
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-  S3_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-  S3_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  S3_REGION: process.env.AWS_REGION,
-  S3_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
+  ACCESS_KEY: process.env.ACCESS_KEY,
+  SECRET_KEY: process.env.SECRET_KEY,
+  REGION: process.env.REGION,
+  S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
 };
 
 /**
