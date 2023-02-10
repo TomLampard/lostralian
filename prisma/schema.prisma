@@ -1,0 +1,288 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextIndex", "fullTextSearch"]
+}
+
+datasource db {
+    provider          = "mysql"
+    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_URL")
+    relationMode      = "prisma"
+}
+
+enum Role {
+    USER
+    CONTRIBUTOR
+    ADMIN
+}
+
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+    @@index([userId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
+
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    nickname      String?
+    bio           String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    orders        Order[]
+    posts         Post[]
+    comments      Comment[]
+    accounts      Account[]
+    sessions      Session[]
+    Cart          Cart?
+    role          Role      @default(USER)
+    ratingsGiven  Ratings[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+
+model Post {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    published Boolean  @default(false)
+    title     String
+    content   String?
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  String
+    comments  Comment[]
+
+    @@index([authorId])
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    published Boolean  @default(false)
+    content   String
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  String
+    post      Post     @relation(fields: [postId], references: [id])
+    postId    String
+
+    @@index([authorId])
+    @@index([postId])
+}
+
+
+model Category {
+    id        String        @id @default(cuid())
+    name      String        @unique
+    slug      String        @unique
+    types     CategoryType  @default(MUSIC)
+    parentId  String?
+    children  SubCategory[] @relation("SubCategoryToCategory")
+    createdAt DateTime      @default(now())
+    updatedAt DateTime?     @updatedAt
+    products  Product[]
+
+    @@index([parentId])
+}
+
+model SubCategory {
+    id        String       @id @default(cuid())
+    name      String       @unique
+    slug      String       @unique
+    types     CategoryType @default(MUSIC)
+    createdAt DateTime     @default(now())
+    updatedAt DateTime?    @updatedAt
+    parentId  String?
+    parent    Category?    @relation("SubCategoryToCategory", fields: [parentId], references: [id])
+    products  Product[]
+
+    @@index([parentId])
+}
+
+model CartItem {
+    id        String  @id @default(cuid())
+    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String
+    quantity  Int
+    cart      Cart    @relation(fields: [cartId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    cartId    String
+
+    @@index([productId])
+    @@index([cartId])
+}
+
+model Cart {
+    id        String     @id @default(cuid())
+    createdAt DateTime   @default(now())
+    user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String?    @unique
+    items     CartItem[]
+
+    @@index([userId])
+}
+
+model Product {
+    id            String         @id @default(cuid())
+    title         String         @unique
+    description   String
+    price         String
+    quantity      Int
+    published     Boolean        @default(true)
+    images        ProductImage[]
+    createdAt     DateTime       @default(now())
+    categories    Category[]
+    categoryId    String?
+    sizes         ProductSize    @default(XL)
+    colors        ProductColor   @default(BLACK)
+    shippingZones ShippingZone   @default(AUSTRALIA)
+    shippingMethod ShippingMethod @default(EXPRESS)
+    shippingCost  ShippingCost[]
+    subCategory   SubCategory?   @relation(fields: [subCategoryId], references: [id])
+    subCategoryId String?
+    CartItem      CartItem[]
+    Ratings       Ratings[]
+
+    @@index([categoryId])
+    @@index([subCategoryId])
+}
+
+model ShippingCost {
+    id        String  @id @default(cuid())
+    cost      Int
+    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String
+    zone      ShippingZone @default(AUSTRALIA)
+    method    ShippingMethod @default(EXPRESS)
+    @@index([productId])
+}
+
+model ProductImage {
+    id        String  @id @default(cuid())
+    url       String
+    key       String
+    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String
+
+    @@index([productId])
+}
+
+model Ratings {
+    id          String   @id @default(cuid())
+    rating      Int
+    createdAt   DateTime @default(now())
+    product     Product  @relation(fields: [productId], references: [id])
+    productId   String
+    title       String
+    description String
+    userName    String?
+    user        User?    @relation(fields: [userId], references: [id])
+    userId      String?
+
+    @@index([productId])
+    @@index([userId])
+}
+
+model Order {
+    id           String   @id @default(cuid())
+    createdAt    DateTime @default(now())
+    user         User?    @relation(fields: [userId], references: [id])
+    userId       String?
+    status       String
+    totalAmount  Int
+    customerNote String
+
+    @@index([userId])
+}
+
+enum ShippingZone {
+    AUSTRALIA
+    NEW_ZEALAND
+    UNITED_STATES
+    CANADA
+    EUROPE
+    ASIA
+    MIDDLE_EAST
+    AFRICA
+    SOUTH_AMERICA
+    ANTARCTICA
+}
+
+enum ShippingMethod {
+    STANDARD
+    EXPRESS
+}
+
+enum CategoryType {
+    MUSIC
+    SECONDHAND
+    DELTA_MERCHANDISE
+    MENS_CLOTHING
+    WOMENS_CLOTHING
+    YOUTH
+    KIDS
+}
+
+enum ProductSize {
+    xxs
+    XS
+    S
+    M
+    L
+    XL
+    XXL
+    XXXL
+}
+
+enum ProductColor {
+    BLACK
+    WHITE
+    GRAY
+    LOSTRALIAN_RED
+    GREEN
+    PINK
+    BLUE
+    PURPLE
+    NATURAL
+    GUM
+    NATURAL_WOOD
+    BLACK_WOOD
+}
