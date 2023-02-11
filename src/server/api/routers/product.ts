@@ -4,17 +4,23 @@ import {
   Prisma,
   ProductColor,
   ProductSize,
-  ShippingMethod,
   ShippingZone,
 } from '@prisma/client';
 import { publicProcedure, createTRPCRouter } from '../trpc';
-import { defaultCategorySelect } from './category';
+import { defaultCategorySelect, defaultSubCategorySelect } from './category';
 
 const defaultProductSelect = Prisma.validator<Prisma.ProductSelect>()({
   id: true,
   name: true,
   description: true,
   price: true,
+  quantity: true,
+  published: true,
+  alt: true,
+  slug: true,
+  sizes: true,
+  colors: true,
+  shippingZones: true,
   ratings: {
     select: {
       rating: true,
@@ -38,9 +44,13 @@ const defaultProductSelect = Prisma.validator<Prisma.ProductSelect>()({
   categories: {
     select: {
       ...defaultCategorySelect,
-      types: true,
     }
   },
+  subCategories: {
+    select: {
+      ...defaultSubCategorySelect,
+    }
+  }
 });
 
 export const productRouter = createTRPCRouter({
@@ -51,7 +61,6 @@ export const productRouter = createTRPCRouter({
         slug: z.string().optional(),
         page: z.number().optional(),
         price: z.number().optional(),
-        shippingMethod: z.nativeEnum(ShippingMethod),
         shippingZone: z.nativeEnum(ShippingZone),
         sizes: z.nativeEnum(ProductSize).array().optional(),
         colors: z.nativeEnum(ProductColor).array().optional(),
@@ -59,7 +68,7 @@ export const productRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const {
-        categories = '',
+        categories = [],
         slug,
         page = 1,
         price,
@@ -71,25 +80,8 @@ export const productRouter = createTRPCRouter({
       const skip = take * (page - 1);
 
       const where: Prisma.ProductWhereInput = {
-
         published: true,
-        price: { gte, lte },
-        sizes: sizes.length > 0 ? { hasSome: sizes } : undefined,
-        colors: colors.length > 0 ? { hasSome: colors } : undefined,
       };
-
-      if (slug) {
-        const isParent = await ctx.prisma.category.findFirst({
-          where: {
-            slug,
-            parent: {
-              is: null,
-            },
-          },
-        });
-
-        where.categories = isParent ? { parentId: isParent.id } : { slug };
-      }
 
       const [products, totalCount] = await ctx.prisma.$transaction([
         ctx.prisma.product.findMany({

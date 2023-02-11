@@ -7,19 +7,19 @@ generator client {
 }
 
 datasource db {
-    provider          = "mysql"
+    provider     = "mysql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url               = env("DATABASE_URL")
-    relationMode      = "prisma"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
 enum Role {
-    USER
-    CONTRIBUTOR
-    ADMIN
+    USER        @map("user") // Default
+    CONTRIBUTOR @map("contributor") // Can create edit, remove posts, comments, mixtape media, and manage orders
+    ADMIN       @map("admin") // admin - delta and tomkat only
 }
 
 // Necessary for Next auth
@@ -55,11 +55,11 @@ model Session {
 model User {
     id            String    @id @default(cuid())
     name          String?
-    nickname      String?
-    bio           String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    profile       Profile? 
+    profileId     String?
     orders        Order[]
     posts         Post[]
     comments      Comment[]
@@ -78,15 +78,28 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-
-model Post {
+model Profile {
     id        String   @id @default(cuid())
+    bio       String?
+    website   String?
+    location  String?
+    nickname  String?  @unique
+    image     String?
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    published Boolean  @default(false)
+}
+
+model Post {
+    id        String      @id @default(cuid())
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    published Boolean     @default(false)
     title     String
-    content   String?
-    author    User     @relation(fields: [authorId], references: [id])
+    content   String
+    images    PostImage[]
+    author    User        @relation(fields: [authorId], references: [id])
     authorId  String
     comments  Comment[]
 
@@ -94,20 +107,20 @@ model Post {
 }
 
 model Comment {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    published Boolean  @default(false)
+    id        String         @id @default(cuid())
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+    published Boolean        @default(false)
     content   String
-    author    User     @relation(fields: [authorId], references: [id])
+    images    CommentImage[]
+    author    User           @relation(fields: [authorId], references: [id])
     authorId  String
-    post      Post     @relation(fields: [postId], references: [id])
+    post      Post           @relation(fields: [postId], references: [id])
     postId    String
 
     @@index([authorId])
     @@index([postId])
 }
-
 
 model Category {
     id        String        @id @default(cuid())
@@ -160,46 +173,57 @@ model Cart {
 }
 
 model Product {
-    id            String         @id @default(cuid())
-    name          String         @unique
-    description   String
-    price         String
-    quantity      Int
-    published     Boolean        @default(true)
-    images        ProductImage[]
-    createdAt     DateTime       @default(now())
-    categories    Category[]
-    categoryId    String?
-    sizes         ProductSize    @default(XL)
-    colors        ProductColor   @default(BLACK)
-    shippingZones ShippingZone   @default(AUSTRALIA)
-    shippingMethod ShippingMethod @default(EXPRESS)
-    shippingCost  ShippingCost[]
-    subCategory   SubCategory?   @relation(fields: [subCategoryId], references: [id])
-    subCategoryId String?
-    cartItem      CartItem[]
-    ratings       Ratings[]
+    id             String         @id @default(cuid())
+    name           String         @unique
+    slug           String         @unique
+    description    String
+    alt            String
+    price          Decimal        @db.Decimal(18, 2)
+    quantity       Int
+    published      Boolean        @default(true)
+    images         ProductImage[]
+    createdAt      DateTime       @default(now())
+    categories     Category[]
+    categoryId     String?
+    sizes          ProductSize    @default(XL)
+    colors         ProductColor   @default(BLACK)
+    shippingZones  ShippingZone   @default(AUSTRALIA)
+    subCategories  SubCategory[]  
+    subCategoryId  String?
+    cartItem       CartItem[]
+    ratings        Ratings[]
 
     @@index([categoryId])
     @@index([subCategoryId])
 }
 
-model ShippingCost {
-    id        String  @id @default(cuid())
-    cost      Int
-    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-    productId String
-    zone      ShippingZone @default(AUSTRALIA)
-    method    ShippingMethod @default(EXPRESS)
-    @@index([productId])
+
+model PostImage {
+    id     String  @id @default(cuid())
+    url    String
+    key    String
+    post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId String?
+
+    @@index([postId])
+}
+
+model CommentImage {
+    id        String   @id @default(cuid())
+    url       String
+    key       String
+    comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    commentId String?
+
+    @@index([commentId])
 }
 
 model ProductImage {
-    id        String  @id @default(cuid())
+    id        String   @id @default(cuid())
     url       String
     key       String
-    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-    productId String
+    product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String?
 
     @@index([productId])
 }
@@ -234,55 +258,51 @@ model Order {
 }
 
 enum ShippingZone {
-    AUSTRALIA
-    NEW_ZEALAND
-    UNITED_STATES
-    CANADA
-    EUROPE
-    ASIA
-    MIDDLE_EAST
-    AFRICA
-    SOUTH_AMERICA
-    ANTARCTICA
-}
-
-enum ShippingMethod {
-    STANDARD
-    EXPRESS
+    AUSTRALIA     @map("AUSTRALIA")
+    NEW_ZEALAND   @map("NEW_ZEALAND")
+    UNITED_STATES @map("UNITED_STATES")
+    CANADA        @map("CANADA")
+    EUROPE        @map("EUROPE")
+    ASIA          @map("ASIA")
+    MIDDLE_EAST   @map("MIDDLE_EAST")
+    AFRICA        @map("AFRICA")
+    SOUTH_AMERICA @map("SOUTH_AMERICA")
+    ANTARCTICA    @map("ANTARCTICA")
 }
 
 enum CategoryType {
-    MUSIC
-    SECONDHAND
-    DELTA_MERCHANDISE
-    MENS_CLOTHING
-    WOMENS_CLOTHING
-    YOUTH
-    KIDS
+    MUSIC             @map("MUSIC")
+    SECONDHAND        @map("SECONDHAND")
+    DELTA_MERCHANDISE @map("DELTA_MERCHANDISE")
+    MENS_CLOTHING     @map("MENS_CLOTHING")
+    WOMENS_CLOTHING   @map("WOMENS_CLOTHING")
+    YOUTH             @map("YOUTH")
+    KIDS              @map("KIDS")
 }
 
 enum ProductSize {
-    xxs
-    XS
-    S
-    M
-    L
-    XL
-    XXL
-    XXXL
+    xxs  @map("XXS")
+    XS   @map("XS")
+    S    @map("S")
+    M    @map("M")
+    L    @map("L")
+    XL   @map("XL")
+    XXL  @map("XXL")
+    XXXL @map("XXXL")
 }
 
 enum ProductColor {
-    BLACK
-    WHITE
-    GRAY
-    LOSTRALIAN_RED
-    GREEN
-    PINK
-    BLUE
-    PURPLE
-    NATURAL
-    GUM
-    NATURAL_WOOD
-    BLACK_WOOD
+    BLACK          @map("BLACK")
+    WHITE          @map("WHITE")
+    GRAY           @map("GRAY")
+    MARBLE_VINYL   @map("MARBLE_VINYL")
+    LOSTRALIAN_RED @map("LOSTRALIAN_RED")
+    GREEN          @map("GREEN")
+    PINK           @map("PINK")
+    BLUE           @map("BLUE")
+    PURPLE         @map("PURPLE")
+    NATURAL        @map("NATURAL")
+    GUM            @map("GUM")
+    NATURAL_WOOD   @map("NATURAL_WOOD")
+    BLACK_WOOD     @map("BLACK_WOOD")
 }

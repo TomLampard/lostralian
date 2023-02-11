@@ -14,7 +14,12 @@ export const CreateProductSchema = z.object({
     .min(2)
     .max(2000),
 
-  images: z.array({
-    required_error: "Product images are required",
+  price: z.number({
+    required_error: "Product price is required",
+  }),
+
+  images: z.object({
+    url: z.string(),
+    key: z.string(),
   })
 });

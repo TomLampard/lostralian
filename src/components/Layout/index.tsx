@@ -55,6 +55,9 @@ export const Layout = ({ children }: LayoutProps) => {
                 <MenuItemLink href={`/profile/${session?.user?.id}`}>
                   Profile
                 </MenuItemLink>
+                <MenuItemLink href={`/orders/${session?.user?.id}`}>
+                  Orders
+                </MenuItemLink>
                 <MenuItemButton onClick={() => signOut()} >
                   Log Out
                 </MenuItemButton>

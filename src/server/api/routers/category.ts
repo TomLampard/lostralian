@@ -16,6 +16,22 @@ export const defaultCategorySelect = Prisma.validator<Prisma.CategorySelect>()({
   },
 });
 
+export const defaultSubCategorySelect =
+  Prisma.validator<Prisma.SubCategorySelect>()({
+    id: true,
+    name: true,
+    slug: true,
+    types: true,
+    parent: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        types: true,
+      },
+    },
+  });
+
 export const categoryRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
     await ctx.prisma.category.findMany({
