@@ -2,7 +2,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useEffect } from "react";
 import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreatePostSchema } from "../../schema";
+import { CreateProductSchema } from "../../utils/schema";
 import { Button } from "../buttons/button";
 import { ButtonLink } from "../buttons/buttonLink";
 import { FileInput } from "./fileInput";
@@ -45,7 +45,6 @@ export const CreateProductForm = ({
       <div>
         <>
           <FileInput
-            {...register("file")}
             label="File"
             placeholder="Select a file"
             id="file"
