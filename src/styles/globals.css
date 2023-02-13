@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --color-white: #fff;
+  --color-white: #fffffff5;
   --color-black: #000;
 
   --color-gray-050: #fafbfc;
@@ -90,7 +90,7 @@
 }
 
 .light {
-  --bg-primary: var(--color-white);
+  --bg-primary: var(--color-grey-050);
   --bg-primary-inverse: var(--color-gray-900);
   --bg-secondary: var(--color-gray-050);
   --bg-secondary-inverse: var(--color-gray-800);
