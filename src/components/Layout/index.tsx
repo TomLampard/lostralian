@@ -84,11 +84,6 @@ export const Layout = ({ children }: LayoutProps) => {
               </div>
             </MenuItems>
           </Menu>
-
-          <ButtonLink href="/new">
-            <span className="sm:hidden">Post</span>
-            <span className="hidden shrink-0 sm:block">New Post</span>
-          </ButtonLink>
         </div>
       </header>
       <main>{children}</main>

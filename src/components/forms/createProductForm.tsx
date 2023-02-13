@@ -7,6 +7,8 @@ import { Button } from "../buttons/button";
 import { ButtonLink } from "../buttons/buttonLink";
 import { FileInput } from "./fileInput";
 import { TextInput } from "./textInput";
+import { NumberInput } from "./numberInput";
+import { RadioInput } from "./radioInput";
 import { TextAreaInput } from "./textareaInput";
 
 export type CreateProductType = z.infer<typeof CreateProductSchema>;
@@ -41,12 +43,15 @@ export const CreateProductForm = ({
   }, [isSubmitSuccessful, reset, getValues]);
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <>
           <FileInput
-            label="File"
-            placeholder="Select a file"
+            {...register("images")}
+            type="file"
+            label="Product Images"
+            placeholder="Select a Product Image"
             id="file"
             name="file"
             className="!py-1.5 text-lg font-semibold"
@@ -56,6 +61,7 @@ export const CreateProductForm = ({
       <div>
         <TextInput
           {...register("title")}
+          type="text"
           label="Title"
           placeholder="Title"
           id="title"
@@ -65,12 +71,91 @@ export const CreateProductForm = ({
       </div>
       <div className="mt-6">
         <TextAreaInput
-          {...register("content")}
+          {...register("description")}
           id="content"
           label="Content"
           placeholder="Content"
           name="content"
         />
+      </div>
+      <div>
+        <NumberInput 
+          {...register("price")}
+          type="number"
+          label="Price"
+          placeholder="Price"
+          id="price"
+          name="price"
+        />
+      </div>
+      <div>
+        <p>Size Options Available</p>
+        <div className="flex items-center justify-between gap-4">
+          <RadioInput 
+            {...register("sizes")}
+            type="radio"
+            label="Size 'XXS'"
+            id="sizes"
+            name="sizes"
+            value="XXS"
+          />
+          <RadioInput 
+            {...register("sizes")}
+            type="radio"
+            label="Size 'XS'"
+            id="sizes"
+            name="sizes"
+            value="XS"
+          />
+          <RadioInput 
+            {...register("sizes")}
+            type="radio"
+            label="Size 'S'"
+            id="sizes"
+            name="sizes"
+            value="S"
+          />
+          <RadioInput 
+            {...register("sizes")}
+            type="radio"
+            label="Size 'M'"
+            id="sizes"
+            name="sizes"
+            value="M"            
+          />
+          <RadioInput 
+            {...register("sizes")}
+            type="radio"
+            label="Size 'L'"
+            id="sizes"
+            name="sizes"
+            value="L"
+          />
+          <RadioInput 
+            {...register("sizes")}
+            type="radio"
+            label="Size 'XL'"
+            id="sizes"
+            name="sizes"
+            value="XL"
+          />
+          <RadioInput 
+            {...register("sizes")}
+            type="radio"
+            label="Size 'XXL'"
+            id="sizes"
+            name="sizes"
+            value="XXL"
+          />
+          <RadioInput 
+            {...register("sizes")}
+            type="radio"
+            label="Size 'XXXL'"
+            id="sizes"
+            name="sizes"
+            value="XXXL"
+          />
+        </div>
       </div>
       <div className="mt-8 flex items-center justify-between gap-4">
         <div className="flex gap-4">

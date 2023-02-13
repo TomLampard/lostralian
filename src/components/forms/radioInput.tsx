@@ -2,15 +2,17 @@ import { classNames } from "../../utils/classStringify";
 import { forwardRef, type HTMLAttributes } from "react";
 
 
-interface FileInputProps extends HTMLAttributes<HTMLInputElement> {
+
+interface RadioInputProps extends HTMLAttributes<HTMLInputElement> {
   type?: string;
-  label: string;
   name: string;
+  value: string;
+  label: string;
   placeholder?: string;
 }
 
-export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
-  ({ label, type="file", name, className, placeholder, ...props }: FileInputProps, ref) => {
+export const RadioInput = forwardRef<HTMLInputElement, RadioInputProps>(
+  ({ label, type="radio", value, name, className, placeholder, ...props }: RadioInputProps, ref) => {
     return (
       <>
         <label className="block mb-2 font-semibold">
@@ -19,7 +21,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
         <input 
           type={type}
           name={name}
-          multiple
+          value={value}
           placeholder={placeholder}
           ref={ref}
           {...props}
@@ -33,4 +35,4 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
   }
 )
 
-FileInput.displayName = "FileInput"
+RadioInput.displayName = "RadioInput";

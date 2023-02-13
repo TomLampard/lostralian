@@ -11,7 +11,7 @@ import { defaultCategorySelect, defaultSubCategorySelect } from './category';
 
 const defaultProductSelect = Prisma.validator<Prisma.ProductSelect>()({
   id: true,
-  name: true,
+  name: true,  
   description: true,
   price: true,
   quantity: true,

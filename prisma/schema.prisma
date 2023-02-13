@@ -58,7 +58,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    profile       Profile? 
+    profile       Profile?
     profileId     String?
     orders        Order[]
     posts         Post[]
@@ -123,28 +123,15 @@ model Comment {
 }
 
 model Category {
-    id        String        @id @default(cuid())
-    name      String        @unique
-    slug      String        @unique
-    types     CategoryType  @default(MUSIC)
-    parentId  String?
-    children  SubCategory[] @relation("SubCategoryToCategory")
-    createdAt DateTime      @default(now())
-    updatedAt DateTime?     @updatedAt
-    products  Product[]
-
-    @@index([parentId])
-}
-
-model SubCategory {
     id        String       @id @default(cuid())
+    createdAt DateTime     @default(now())
+    updatedAt DateTime?    @updatedAt
     name      String       @unique
     slug      String       @unique
     types     CategoryType @default(MUSIC)
-    createdAt DateTime     @default(now())
-    updatedAt DateTime?    @updatedAt
     parentId  String?
-    parent    Category?    @relation("SubCategoryToCategory", fields: [parentId], references: [id])
+    parent    Category?    @relation("SubCategoryToCategory", fields: [parentId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+    children  Category[]   @relation("SubCategoryToCategory")
     products  Product[]
 
     @@index([parentId])
@@ -173,39 +160,47 @@ model Cart {
 }
 
 model Product {
-    id             String         @id @default(cuid())
-    name           String         @unique
-    slug           String         @unique
-    description    String
-    alt            String
-    price          Decimal        @db.Decimal(18, 2)
-    quantity       Int
-    published      Boolean        @default(true)
-    images         ProductImage[]
-    createdAt      DateTime       @default(now())
-    categories     Category[]
-    categoryId     String?
-    sizes          ProductSize    @default(XL)
-    colors         ProductColor   @default(BLACK)
-    shippingZones  ShippingZone   @default(AUSTRALIA)
-    subCategories  SubCategory[]  
-    subCategoryId  String?
-    cartItem       CartItem[]
-    ratings        Ratings[]
+    id            String         @id @default(cuid())
+    name          String         @unique
+    slug          String         @unique
+    description   String
+    alt           String
+    price         Decimal        @db.Decimal(10, 2)
+    quantity      Int
+    published     Boolean        @default(true)
+    images        ProductImage[]
+    createdAt     DateTime       @default(now())
+    categories    Category[]
+    categoryId    String?
+    sizes         ProductSize    @default(ONE_SIZE_ONLY)
+    colors        ProductColor   @default(ONE_COLOR_ONLY)
+    shippingZones ShippingZone   @default(AUSTRALIA)
+    shippingCosts ShippingCost[]
+    cartItem      CartItem[]
+    ratings       Ratings[]
 
     @@index([categoryId])
-    @@index([subCategoryId])
+}
+
+model ShippingCost {
+    id        String       @id @default(cuid())
+    cost      Int
+    zone      ShippingZone @default(AUSTRALIA)
+    product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String
+
+    @@index([productId])
 }
 
 
-model PostImage {
-    id     String  @id @default(cuid())
-    url    String
-    key    String
-    post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
-    postId String?
+model ProductImage {
+    id        String   @id @default(cuid())
+    url       String
+    key       String
+    product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String?
 
-    @@index([postId])
+    @@index([productId])
 }
 
 model CommentImage {
@@ -218,14 +213,14 @@ model CommentImage {
     @@index([commentId])
 }
 
-model ProductImage {
-    id        String   @id @default(cuid())
-    url       String
-    key       String
-    product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-    productId String?
+model PostImage {
+    id     String  @id @default(cuid())
+    url    String
+    key    String
+    post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId String?
 
-    @@index([productId])
+    @@index([postId])
 }
 
 model Ratings {
@@ -271,27 +266,29 @@ enum ShippingZone {
 }
 
 enum CategoryType {
-    MUSIC             @map("MUSIC")
-    SECONDHAND        @map("SECONDHAND")
-    DELTA_MERCHANDISE @map("DELTA_MERCHANDISE")
-    MENS_CLOTHING     @map("MENS_CLOTHING")
-    WOMENS_CLOTHING   @map("WOMENS_CLOTHING")
-    YOUTH             @map("YOUTH")
-    KIDS              @map("KIDS")
+    MUSIC      @map("MUSIC")
+    SECONDHAND @map("SECONDHAND")
+    DELTA      @map("DELTA")
+    MENS       @map("MENS")
+    WOMENS     @map("WOMENS")
+    YOUTH      @map("YOUTH")
+    KIDS       @map("KIDS")
 }
 
 enum ProductSize {
-    xxs  @map("XXS")
-    XS   @map("XS")
-    S    @map("S")
-    M    @map("M")
-    L    @map("L")
-    XL   @map("XL")
-    XXL  @map("XXL")
-    XXXL @map("XXXL")
+    ONE_SIZE_ONLY @map("ONE_SIZE_ONLY")
+    xxs           @map("XXS")
+    XS            @map("XS")
+    S             @map("S")
+    M             @map("M")
+    L             @map("L")
+    XL            @map("XL")
+    XXL           @map("XXL")
+    XXXL          @map("XXXL")
 }
 
 enum ProductColor {
+    ONE_COLOR_ONLY @map("ONE_COLOR_ONLY")
     BLACK          @map("BLACK")
     WHITE          @map("WHITE")
     GRAY           @map("GRAY")
