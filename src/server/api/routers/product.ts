@@ -7,8 +7,7 @@ import {
   ShippingZone,
 } from '@prisma/client';
 import { publicProcedure, createTRPCRouter } from '../trpc';
-import { defaultCategorySelect, defaultSubCategorySelect } from './category';
-
+import { defaultCategorySelect } from './category';
 const defaultProductSelect = Prisma.validator<Prisma.ProductSelect>()({
   id: true,
   name: true,  
@@ -46,11 +45,6 @@ const defaultProductSelect = Prisma.validator<Prisma.ProductSelect>()({
       ...defaultCategorySelect,
     }
   },
-  subCategories: {
-    select: {
-      ...defaultSubCategorySelect,
-    }
-  }
 });
 
 export const productRouter = createTRPCRouter({
