@@ -103,6 +103,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: [...defaultTheme.fontFamily.sans],
+        mono: [...defaultTheme.fontFamily.mono],
+        roboto: ['Roboto', ...defaultTheme.fontFamily.mono],
+        garamond: ['Eb Garamond', ...defaultTheme.fontFamily.serif],
       },
       fontSize: {
         base: ['16px', '24px'],

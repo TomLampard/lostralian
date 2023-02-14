@@ -21,6 +21,11 @@ const server = z.object({
   ),
   // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
   DISCORD_CLIENT_ID: z.string(),
+  EMAIL_SERVER_HOST: z.string(),
+  EMAIL_SERVER_USER: z.string(),
+  EMAIL_SERVER_PASSWORD: z.string(),
+  EMAIL_SERVER_PORT: z.number(),
+  EMAIL_FROM: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
   ACCESS_KEY: z.string(),
   SECRET_KEY: z.string(),
@@ -43,6 +48,11 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
+  EMAIL_SERVER_HOST: process.env.EMAIL_SERVER_HOST,
+  EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
+  EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
+  EMAIL_SERVER_PORT: process.env.EMAIL_SERVER_PORT,
+  EMAIL_FROM: process.env.EMAIL_FROM,
   ACCESS_KEY: process.env.ACCESS_KEY,
   SECRET_KEY: process.env.SECRET_KEY,
   REGION: process.env.REGION,

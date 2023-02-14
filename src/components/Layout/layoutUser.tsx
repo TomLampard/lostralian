@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { ReactNode } from "react";
 import { Avatar } from "../avatar";
-import { ButtonLink } from "../buttons/buttonLink";
 import { Footer } from "../footer";
 import { ButtonIcon } from "../buttons/buttonIcon";
 import { Logo, SearchIcon } from "../icons";
@@ -19,11 +18,11 @@ import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
-type LayoutProps = {
+type LayoutUserProps = {
   children: ReactNode;
 };
 
-export const Layout = ({ children }: LayoutProps) => {
+export const LayoutUser = ({ children }: LayoutUserProps) => {
   const { data: session } = useSession();
   const { theme, themes, setTheme } = useTheme();
 
@@ -31,7 +30,7 @@ export const Layout = ({ children }: LayoutProps) => {
     <div className="mx-auto max-w-3xl px-6">
       <header className="flex items-center justify-between gap-4 py-12 md:py-20">
         <Link href="/">
-            <Logo className="text-red-light h-[34px] w-auto" />
+          <Logo className="h-[34px] w-auto text-red-light" />
         </Link>
         <div className="flex items-center gap-2 md:gap-4">
           <ButtonIcon
@@ -44,7 +43,7 @@ export const Layout = ({ children }: LayoutProps) => {
           </ButtonIcon>
           <Menu>
             <MenuButton className="focus-ring group relative inline-flex rounded-full">
-            <Avatar
+              <Avatar
                 name={session?.user?.name}
                 src={session?.user?.image}
                 size="sm"
@@ -58,11 +57,11 @@ export const Layout = ({ children }: LayoutProps) => {
                 <MenuItemLink href={`/orders/${session?.user?.id}`}>
                   Orders
                 </MenuItemLink>
-                <MenuItemButton onClick={() => signOut()} >
+                <MenuItemButton onClick={() => signOut()}>
                   Log Out
                 </MenuItemButton>
               </MenuItemsContent>
-              <div className="bg-secondary flex items-center gap-4 rounded-b px-4 py-3">
+              <div className="flex items-center gap-4 rounded-b bg-secondary px-4 py-3">
                 <label htmlFor="theme" className="text=sm">
                   Theme
                 </label>
@@ -73,7 +72,7 @@ export const Layout = ({ children }: LayoutProps) => {
                   onChange={(event) => {
                     setTheme(event.target.value);
                   }}
-                  className="bg-primary border-secondary block w-full rounded border py-1.5 text-xs shadow-sm"
+                  className="block w-full rounded border border-secondary bg-primary py-1.5 text-xs shadow-sm"
                 >
                   {themes.map((theme) => (
                     <option key={theme} value={theme}>

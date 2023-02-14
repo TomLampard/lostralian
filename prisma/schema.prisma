@@ -160,26 +160,36 @@ model Cart {
 }
 
 model Product {
-    id            String         @id @default(cuid())
-    name          String         @unique
-    slug          String         @unique
-    description   String
-    alt           String
-    price         Decimal        @db.Decimal(10, 2)
-    quantity      Int
-    published     Boolean        @default(true)
-    images        ProductImage[]
-    createdAt     DateTime       @default(now())
-    categories    Category[]
-    categoryId    String?
-    sizes         ProductSize    @default(ONE_SIZE_ONLY)
-    colors        ProductColor   @default(ONE_COLOR_ONLY)
-    shippingZones ShippingZone   @default(AUSTRALIA)
-    shippingCosts ShippingCost[]
-    cartItem      CartItem[]
-    ratings       Ratings[]
+    id                 String           @id @default(cuid())
+    name               String           @unique
+    slug               String           @unique
+    description        String
+    alt                String
+    price              Decimal          @db.Decimal(10, 2)
+    inventory          ProductInventory[] 
+    published          Boolean          @default(true)
+    images             ProductImage[]
+    createdAt          DateTime         @default(now())
+    categories         Category[]
+    categoryId         String?
+    sizes              ProductSize      @default(ONE_SIZE_ONLY)
+    colors             ProductColor     @default(ONE_COLOR_ONLY)
+    shippingZones      ShippingZone     @default(AUSTRALIA)
+    shippingCosts      ShippingCost[]
+    cartItem           CartItem[]
+    ratings            Ratings[]
 
     @@index([categoryId])
+}
+
+model ProductInventory {
+    id        String  @id @default(cuid())
+    quantity  Int
+    product   Product   @relation(fields: [productId], references: [id])
+    productId String   @unique
+    size      ProductSize @default(ONE_SIZE_ONLY)
+    color     ProductColor @default(ONE_COLOR_ONLY)   
+    @@index([productId])
 }
 
 model ShippingCost {
@@ -191,7 +201,6 @@ model ShippingCost {
 
     @@index([productId])
 }
-
 
 model ProductImage {
     id        String   @id @default(cuid())

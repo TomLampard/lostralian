@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import type { NextPageWithAuthLayout } from "src/utils/types";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
-import { SessionProvider, signIn, useSession } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { api } from "../utils/api";
 
@@ -19,11 +20,7 @@ function LostralianApp({ Component, pageProps }: NextAppWithAuthLayout) {
   return (
     <SessionProvider>
       <ThemeProvider>
-        {Component.auth ? (
-          <Auth>{getLayout(<Component {...pageProps} />)}</Auth>
-        ) : (
-          getLayout(<Component {...pageProps} />)
-        )}
+        {getLayout(<Component {...pageProps} />)}
         <Toaster />
       </ThemeProvider>
     </SessionProvider>
@@ -32,18 +29,3 @@ function LostralianApp({ Component, pageProps }: NextAppWithAuthLayout) {
 
 export default api.withTRPC(LostralianApp);
 
-export const Auth = ({ children }: { children: ReactNode }) => {
-  const { data: session, status } = useSession();
-  const isUser = !!session?.user;
-  useEffect(() => {
-    if (status === "loading") return;
-    if (!isUser) {
-      void signIn("discord");
-    } 
-  }, [isUser, status]);
-
-  if (isUser) {
-    return <>{children}</>;
-  }
-  return null;
-};
