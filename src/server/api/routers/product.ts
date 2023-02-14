@@ -13,7 +13,13 @@ const defaultProductSelect = Prisma.validator<Prisma.ProductSelect>()({
   name: true,  
   description: true,
   price: true,
-  quantity: true,
+  inventory: {
+    select: {
+      size: true,
+      color: true,
+      quantity: true,
+    },
+  },
   published: true,
   alt: true,
   slug: true,
