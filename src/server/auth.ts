@@ -11,6 +11,10 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../env/env.mjs";
 import { prisma } from "./db";
 
+
+
+const emailServerEnv = parseInt(env.EMAIL_SERVER_PORT || " ");
+
 /**
  * Module augmentation for `next-auth` types.
  * Allows us to add custom properties to the `session` object and keep type
@@ -59,7 +63,7 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       server: {
         host: env.EMAIL_SERVER_HOST,
-        port: env.EMAIL_SERVER_PORT,
+        port: emailServerEnv,
         auth: {
           user: env.EMAIL_SERVER_USER,
           pass: env.EMAIL_SERVER_PASSWORD,
