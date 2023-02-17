@@ -35,7 +35,7 @@ const Home: NextPageWithAuthLayout = () => {
             <p className="text-center font-nunito text-xs font-extralight md:text-sm sm:text-xs ">
               The site is currently in development. <br />
               Keep an eye out here for updates, and some new heat available real
-              soon.
+              soon!!
             </p>
           </div>
         </div>
