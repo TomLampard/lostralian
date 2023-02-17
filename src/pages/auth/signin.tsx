@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { LayoutSignIn } from "@components/layout/layoutSignIn";
+import { LayoutSignIn } from "@components/Layout/layoutSignIn";
 import { Button } from "@components/buttons/button";
 import Div100vh from "react-div-100vh";
 

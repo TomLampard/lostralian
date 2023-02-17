@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { LayoutUser } from "@components/layout/layoutUser";
+import { LayoutUser } from "@components/Layout/layoutUser";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import type { NextPageWithAuthLayout } from "../utils/types";
