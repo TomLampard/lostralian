@@ -43,6 +43,7 @@ export const CreateProductForm = ({
   }, [isSubmitSuccessful, reset, getValues]);
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="shadow sm:overflow-hidden sm:rounded-md">
       <div>
