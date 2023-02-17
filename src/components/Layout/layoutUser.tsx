@@ -3,8 +3,7 @@
 import type { ReactNode } from "react";
 import { Avatar } from "@components/avatar";
 import { Footer } from "@components/footer";
-import { ButtonIcon } from "@components/buttons/buttonIcon";
-import { Logo, SearchIcon } from "@components/icons";
+import { Logo } from "@components/icons";
 import {
   Menu,
   MenuButton,
@@ -31,10 +30,7 @@ export const LayoutUser = ({ children }: LayoutUserProps) => {
       <div className="mx-auto max-w-3xl px-6">
         <header className="flex items-center justify-between gap-4 py-12 md:py-20">
           <Link href="/">
-            <Logo 
-              className="w-auto text-red-light" 
-              width={54}  
-            />
+            <Logo className="w-auto text-red-light" width={54} />
           </Link>
           {
             // If the user is not logged in, show the login button.
