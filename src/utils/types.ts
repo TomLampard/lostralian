@@ -7,5 +7,9 @@ export type NextPageWithAuthLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
+export type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
 export type Author = Pick<User, "id" | "name" | "image" >;
 export type AuthorProfile = Pick<Profile, "id" | "nickname" | "userId" >;

@@ -2,14 +2,14 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useEffect } from "react";
 import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateProductSchema } from "../../utils/schema";
-import { Button } from "../buttons/button";
-import { ButtonLink } from "../buttons/buttonLink";
-import { FileInput } from "./fileInput";
-import { TextInput } from "./textInput";
-import { NumberInput } from "./numberInput";
-import { RadioInput } from "./radioInput";
-import { TextAreaInput } from "./textareaInput";
+import { CreateProductSchema } from "@schema/index";
+import { Button } from "@components/buttons/button";
+import { ButtonLink } from "@components/buttons/buttonLink";
+import { FileInput } from "@components/forms/fileInput";
+import { TextInput } from "@components/forms/textInput";
+import { NumberInput } from "@components/forms/numberInput";
+import { RadioInput } from "@components/forms/radioInput";
+import { TextAreaInput } from "@components/forms/textareaInput";
 
 export type CreateProductType = z.infer<typeof CreateProductSchema>;
 
@@ -43,7 +43,6 @@ export const CreateProductForm = ({
   }, [isSubmitSuccessful, reset, getValues]);
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="shadow sm:overflow-hidden sm:rounded-md">
       <div>

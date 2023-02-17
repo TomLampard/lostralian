@@ -1,6 +1,6 @@
-import type { ButtonVariant } from "../buttons/button";
+import type { ButtonVariant } from "@components/buttons/button";
 import type { ComponentPropsWithoutRef } from "react";
-import { classNames } from "../../utils/classStringify";
+import { classNames } from "@utils/classStringify";
 import { forwardRef } from "react";
 
 export type ButtonIconOwnProps = {

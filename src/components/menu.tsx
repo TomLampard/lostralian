@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Fragment } from "react";
-import { classNames } from "../utils/classStringify";
+import { classNames } from "@utils/classStringify";
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
 import Link from "next/link";
 
@@ -56,7 +56,7 @@ const menuItemClasses = ({
 }) => {
   return classNames(
     active && "bg-secondary",
-    "block w-full text-left px-4 py-2 text-sm text-primary transition-colors",
+    "bg-primary block w-full text-left px-4 py-2 text-sm text-primary transition-colors",
     className
   );
 };

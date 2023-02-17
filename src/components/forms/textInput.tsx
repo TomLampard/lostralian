@@ -1,4 +1,4 @@
-import { classNames } from "../../utils/classStringify";
+import { classNames } from "@utils/classStringify";
 import { forwardRef, type HTMLAttributes } from "react";
 
 

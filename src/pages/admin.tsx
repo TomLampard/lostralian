@@ -12,27 +12,21 @@ const Home: NextPageWithAuthLayout = () => {
   return (
     <>
       <Head>
-        <title>Lostralian.com | Home of Delta, The Lostralian</title>
+        <title>Admin Only | Lostralian.com </title>
         <meta
           name="description"
-          content="The official home of Delta, The Lostralian"
+          content="Admin access only. Lostralian.com admin page"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Div100vh>
-        <div className="flex flex-col items-center">
-            <h2 className="text-serif font-bold text-center tracking-tight text-3xl mb-2">Welcome to</h2>
-          <div
-            className="bg-cover bg-clip-text bg-center font-serif text-4xl font-extrabold uppercase tracking-tighter text-transparent antialiased sm:text-5xl md:text-7xl"
-            style={{
-              backgroundImage:
-                "url(https://media3.giphy.com/media/minslOXFCUW3hdjwKp/giphy.gif)",
-            }}
-          >
-          Lostralian.com
-          </div>
-          <div className="flex min-w-min max-w-sm flex-col items-center mt-6">
-            <p className="text-center font-nunito text-xs font-extralight md:text-sm sm:text-xs ">
+        <div className="flex h-52 flex-col items-center justify-center gap-6 md:h-96">
+          <h2 className="max-w-lg text-center font-serif text-3xl font-bold tracking-tight md:text-4xl">
+            Welcome to
+            <br /> Lostralian.com
+          </h2>
+          <div className="flex min-w-min max-w-sm flex-col items-center justify-center">
+            <p className="text-center font-nunito text-xs font-extralight md:text-sm">
               The site is currently in development. <br />
               Keep an eye out here for updates, and some new heat available real
               soon.

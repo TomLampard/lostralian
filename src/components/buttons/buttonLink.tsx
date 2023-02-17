@@ -1,7 +1,7 @@
-import type { ButtonVariant } from "./button";
+import type { ButtonVariant } from "@components/buttons/button";
 import type { ComponentPropsWithoutRef } from "react";
 import type { LinkProps } from "next/link";
-import { Button } from "./button";
+import { Button } from "@components/buttons/button";
 import Link from "next/link";
 import { forwardRef } from "react";
 

@@ -1,5 +1,5 @@
-import { SpinnerIcon } from "../icons";
-import { classNames } from "../../utils/classStringify";
+import { SpinnerIcon } from "@components/icons";
+import { classNames } from "@utils/classStringify";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { forwardRef } from "react";
 
@@ -27,7 +27,7 @@ export const buttonClasses = ({
     variant === "primary" &&
       "text-secondary-inverse bg-secondary-inverse hover:text-primary-inverse hover:bg-primary-inverse",
     variant === "secondary" &&
-      "border text-primary border-secondary bg-primary hover:bg-secondary",
+      "border text-primary border-secondary bg-primary hover:bg- hover:text-secondary-reverse",
     (disabled || isLoading) && "opacity-50 cursor-default",
     className
   );

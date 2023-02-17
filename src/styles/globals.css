@@ -91,9 +91,9 @@
 
 .light {
   --bg-primary: var(--color-grey-050);
-  --bg-primary-inverse: var(--color-gray-900);
+  --bg-primary-inverse: var(--color-gray-850);
   --bg-secondary: var(--color-gray-050);
-  --bg-secondary-inverse: var(--color-gray-800);
+  --bg-secondary-inverse: var(--color-gray-850);
   --bg-green: var(--color-green-600);
   --bg-green-light: var(--color-green-050);
   --bg-yellow-light: var(--color-yellow-050);
@@ -117,8 +117,8 @@
 }
 
 .dark {
-  --bg-primary: var(--color-gray-900);
-  --bg-primary-inverse: var(--color-white);
+  --bg-primary: var(--color-gray-850);
+  --bg-primary-inverse: var(--color-gray-050);
   --bg-secondary: var(--color-gray-850);
   --bg-secondary-inverse: var(--color-gray-050);
   --bg-green: var(--color-green-500);
@@ -145,47 +145,15 @@
 }
 
 @layer base {
-  @font-face {
-    font-family: "Roboto";
-    font-style: normal;
-    font-weight: 100 700;
-    font-display: swap;
-    src: url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap");
-    font-named-instance: "Regular";
-  }
-
-  @font-face {
-    font-family: "Roboto";
-    font-style: italic;
-    font-weight: 100 700;
-    font-display: swap;
-    src: url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
-    font-named-instance: "Italic";
-  }
-
-  @font-face {
-    font-family: "EB Garamond";
-    font-style: normal;
-    font-weight: 400 800;
-    font-display: swap;
-    src: url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700;800&display=swap");
-    font-named-instance: "Regular";
-  }
-
-  @font-face {
-    font-family: "EB Garamond";
-    font-style: italic;
-    font-weight: 400 800;
-    font-display: swap;
-    src: url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500;1,600;1,700;1,800&display=swap");
-    font-named-instance: "Italic";
-  }
 
   body {
     @apply text-base;
     @apply text-primary;
     @apply bg-primary;
     @apply antialiased;
+    @apply font-nunito;
+    @apply font-sans;
+    @apply font-serif;
   }
 
   a {

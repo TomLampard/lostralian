@@ -10,8 +10,8 @@ type AvatarProps = {
 };
 
 const dimension: Record<AvatarSize, number> = {
-  sm: 34,
-  md: 48,
+  sm: 42,
+  md: 56,
   lg: 128,
 };
 

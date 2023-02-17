@@ -1,40 +1,28 @@
 import type { GetServerSidePropsContext } from "next";
-import {
+import type { UserRole } from "@prisma/client";
+import NextAuth, {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
-import EmailProvider from "next-auth/providers/email";
-import { SendEmailVerification } from "../pages/api/auth/SendEmailVerification";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../env/env.mjs";
 import { prisma } from "./db";
 
 
-
-const emailServerEnv = parseInt(env.EMAIL_SERVER_PORT || " ");
-
-/**
- * Module augmentation for `next-auth` types.
- * Allows us to add custom properties to the `session` object and keep type
- * safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- **/
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    role: UserRole;
+  }
 }
 
 /**
@@ -45,10 +33,16 @@ declare module "next-auth" {
  **/
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session({ session, user }) {
+    async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        // session.user.role = user.role; <-- put other properties on the session here
+        
+        const userRole = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: { role: true },
+        });
+
+        session.user.role = userRole?.role || "USER";
       }
       return session;
     },
@@ -60,46 +54,22 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
 
-    EmailProvider({
-      server: {
-        host: env.EMAIL_SERVER_HOST,
-        port: emailServerEnv,
-        auth: {
-          user: env.EMAIL_SERVER_USER,
-          pass: env.EMAIL_SERVER_PASSWORD,
-        },
-      },
-      from: env.EMAIL_FROM,
-      sendVerificationRequest({ identifier, url, provider, theme }) {
-        void SendEmailVerification({
-          identifier,
-          url,
-          provider,
-          theme,
-        });
-      },
-    }),
-    /**
-     * ...add more providers here
-     *
-     * Most other providers require a bit more work than the Discord provider.
-     * For example, the GitHub provider requires you to add the
-     * `refresh_token_expires_in` field to the Account model. Refer to the
-     * NextAuth.js docs for the provider you want to use. Example:
-     * @see https://next-auth.js.org/providers/github
-     **/
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),  
   ],
+  pages: {
+    signIn: "/auth/signin",
+  }
 };
 
-/**
- * Wrapper for `getServerSession` so that you don't need to import the
- * `authOptions` in every file.
- *
- * @see https://next-auth.js.org/configuration/nextjs
- **/
-export const getServerAuthSession = (ctx: {
+
+export default NextAuth(authOptions);
+
+export const getServerAuthSession = async (ctx: {
   req: GetServerSidePropsContext["req"];
   res: GetServerSidePropsContext["res"];
 }) => {
-  return getServerSession(ctx.req, ctx.res, authOptions);
+  return await getServerSession(ctx.req, ctx.res, authOptions);
 };
