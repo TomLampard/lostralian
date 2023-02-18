@@ -17,8 +17,8 @@ const Home: NextPageWithAuthLayout = () => {
       </Head>
       <Div100vh>
         <div className="flex flex-col items-center">
-            <h2 className="font-bold text-center tracking-tight text-3xl mb-2">Welcome to</h2>
-          <h3 className="text-4xl font-extrabold text-primary uppercase tracking-tighter">
+            <h2 className="font-bold font-garamond text-center tracking-tight text-3xl mb-6">Welcome to</h2>
+          <h3 className="text-5xl font-garamond font-extrabold text-primary uppercase tracking-tighter md:text-6xl">
             Lostralian.com
           </h3>
           <div className="flex min-w-min max-w-sm flex-col items-center mt-6">
