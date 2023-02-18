@@ -18,15 +18,10 @@ const Home: NextPageWithAuthLayout = () => {
       <Div100vh>
         <div className="flex flex-col items-center">
             <h2 className="text-serif font-bold text-center tracking-tight text-3xl mb-2">Welcome to</h2>
-          <div
-            className="bg-cover bg-clip-text bg-center font-serif text-4xl font-extrabold uppercase tracking-tighter text-transparent antialiased sm:text-5xl md:text-7xl"
-            style={{
-              backgroundImage:
-                "url(https://media3.giphy.com/media/minslOXFCUW3hdjwKp/giphy.gif)",
-            }}
-          >
+          <h3 className="font-serif text-4xl font-extrabold text-primary uppercase tracking-tighter">
+            Lostralian.com
+          </h3>
           Lostralian.com
-          </div>
           <div className="flex min-w-min max-w-sm flex-col items-center mt-6">
             <p className="text-center font-nunito text-xs font-extralight md:text-sm sm:text-xs ">
               The site is currently in development. <br />
