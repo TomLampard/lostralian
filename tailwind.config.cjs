@@ -103,7 +103,7 @@ module.exports = {
       fontFamily: {
         nunito: ["nunito", ...defaultTheme.fontFamily.sans],
         sans: ["openSans", ...defaultTheme.fontFamily.sans],
-        serif: ["Eb Garamond"],
+        serif: ["Eb Garamond", ...defaultTheme.fontFamily.serif],
       },
       fontSize: {
         base: ["16px", "24px"],
